@@ -6,9 +6,6 @@ let longitude
 let latitude
 
 
-
-
-
 new Autocomplete("location", {
     selectFirst: true,
     insertToInput: true,
@@ -127,9 +124,6 @@ function sendData(event) {
                 showFailAlert("Activiteit aanmaken is niet gelukt! Probeer opnieuw...");
             });
     }
-
-
-
 
 }
 

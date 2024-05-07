@@ -4,9 +4,7 @@ body{
     background-color: #198754;
 }
 
-.nav{
-    background-color: white;
-}
+
 
 #map{
     height: 84vh;
@@ -350,15 +348,6 @@ h2,h4 {
     width: 100%;
 }
 
-#userIcon{
-    vertical-align: center;
-    horiz-align: right;
-    padding-top:5px;
-    padding-right: 20px;
-    margin-right: 45px;
-
-}
-
 .inhoud{
     background-color: white;
 }
@@ -376,8 +365,6 @@ h2,h4 {
 
 #logoutBtn {
     margin-top: 10px;
-
-
     border: 2px solid;
     padding: 5px 10px;
     cursor: pointer;
@@ -391,4 +378,71 @@ a{
 }
 #filterDate{
     border:none;
+}
+
+/*Hamburger magic*/
+.nav{
+    background-color: white;
+    z-index:5;
+}
+.navbar{
+    padding: 0;
+    background-color: white;
+    display: flex;
+    width: 100%;
+    z-index: 6;
+}
+.nav-tabs{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#userIcon{
+    padding-top:5px;
+    padding-right: 20px;
+    margin-left: auto;
+}
+
+.hamburger{
+    margin-right: auto;
+    display: none;
+    cursor: pointer;
+}
+.bar{
+    position: relative;
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin: 5px;
+    -webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    background-color: blue;
+    z-index: 6;
+}
+@media (max-width: 768px) {
+    .hamburger{
+        display: block;
+    }
+    .hamburger.active .bar:nth-child(2){
+        opacity: 0;
+    }
+    .hamburger.active .bar:nth-child(1){
+        transform: translateY(8px) rotate(45deg);
+    }
+    .hamburger.active .bar:nth-child(3){
+        transform: translateY(-8px) rotate(-45deg);
+    }
+    .nav-tabs{
+        position:fixed;
+        left: -100%;
+        flex-direction: column;
+        text-align: center;
+        transition: 0.3s;
+    }
+    .nav-item{
+        margin: 16px 0;
+    }
+    .nav-tabs.active{
+        left:0;
+    }
 }
