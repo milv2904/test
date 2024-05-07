@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>See Activities</title>
+  <!-- CSS en JS code voor gebruik van leafletMap -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"/>
+  <script defer src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+  <!-- Eigen CSS en JS code -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="./styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script defer src="../scripts/script.js" type="module"></script>
+  <script defer src="../scripts/LeafletMap.js" type="module"></script>
+  <script defer src="../scripts/ActivityDAO.js" type="module"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+  <script defer src="../scripts/Login.js" type="module"></script>
+  <script defer src="../scripts/showAlerts.js" type="module"></script>
+</head>
+<body>
+
+<!-- Het modaal venster -->
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Inloggen</h2>
+    <p>Let op: Dit is een niet beveiligde inlogpagina!!<br> Geef geen persoonlijke inloggegevens in!</p>
+    <p>Zie de <a href="http://65f5ba1041d90c1c5e0a0b08.mockapi.io/project/Users" style="color: blue;">MockAPI</a> voor geldige logingegevens die je kunt gebruiken om de website te testen</p>
+    <form id="loginForm">
+      <div class="user-box">
+
+        <input type="text" name="" id="username" required="" />
+        <label for="username">Gebruikersnaam</label>
+
+      </div>
+
+      <div class="user-box">
+        <input type="password" name="" id="password" required="" />
+        <label for="password">Wachtwoord</label>
+        <span class="password-toggle-icon"><i class="fas fa-eye"></i></span>
+      </div>
+      <p class="wrongLogin">Verkeerd gebruikersnaam of wachtwoord</p>
+      <button type="submit" id="submitLogin">Inloggen</button>
+    </form>
+  </div>
+</div>
+
+<div class="inhoud d-flex justify-content-between">
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link" href="../index.html">Home</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" aria-current="page" href="#">See Events</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="CreateEvent.html">Create Events</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="MyEvent.html">My Events</a>
+    </li>
+  </ul>
+  <ul>
+    <li id="userProfile">
+      <i  id="userIcon" class="fa-solid fa-circle-user fa-2x" style="color: #0d6efd;"></i>
+    </li>
+  </ul>
+</div>
+<div id="userInfo" class="user-info">
+  <p id="gebruiker">User: </p>
+  <a  href="../index.html" class="btn" id="logoutBtn">Log out <i class="fa-solid fa-arrow-right-from-bracket"></i></a>
+</div>
+
+<main>
+  <div class="container-fluid">
+    <h1><u>Planned Activities</u></h1>
+    <div id="success_alert" class="alert alert-success" role="alert"><i class="fa-regular fa-circle-check"></i> <span id="success_text"></span></div>
+    <div id="fail_alert" class="alert alert-danger" role="alert"><i class="fa-solid fa-triangle-exclamation"></i> <span id="fail_text"></span></div>
+
+    <div class="row">
+      <div class="col-xl-6 item">
+        <label for="filterDate"><i class="fa-solid fa-filter"></i> Filter op datum:</label>
+        <input type="date" id="filterDate">
+        <button id="filterReset"><i class="fa-solid fa-filter" ></i> Reset Filter</button>
+      </div>
+
+
+      <div class="col-xl-6 item">
+        <input type="radio" class="btn-check" name="options-base" id="optionAll" autocomplete="off" checked>
+        <label class="btn btn-toggle" for="optionAll">Alle activiteiten</label>
+
+        <input type="radio" class="btn-check" name="options-base" id="optionMy" autocomplete="off">
+        <label class="btn btn-toggle" for="optionMy">Mijn ingeschreven activiteiten</label>
+      </div>
+    </div>
+
+
+
+
+    <div class="row">
+      <div class="col-xl-6">
+        <div class="kaart">
+          <div id="map" ></div>
+        </div>
+      </div>
+      <div class="col-xl-6">
+
+        <div class="activiteitenlijst">
+
+          <ul id="activiteitenlijst">
+            <!-- template voor het weergeven van activiteiten-->
+
+          </ul>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+</main>
+</body>
+
+<template id="eventTemplate" >
+  <li class="event" >
+    <div class="card">
+      <div class="card-body">
+        <strong>Naam organisator: </strong><span class="name"></span><br>
+        <strong>Tijdstip: </strong><span class="datum"></span><br>
+        <strong>Game: </strong><span class="game"></span><br>
+        <strong>Locatie: </strong><span class="locatie"></span><br>
+        <strong>Extra info: </strong><span class="info"></span><br>
+      </div>
+    </div>
+    <p class="ingeschrevenText" hidden="true">U bent ingeschreven voor deze activiteit</p>
+    <div class="button-container">
+      <div class="row">
+        <div class="col-sm-4  col-lg-6">
+          <div ><i class="fa-solid fa-users fa-2x " style="color: #ffffff;"></i> <span class="ingeschreven">Aantal ingeschreven: {{aantalIngeschreven}}/{{maxPersonen}}</span></div>
+        </div>
+        <div class="col-sm-4  col-lg-3">
+          <button class="schrijf-in"><i class="fa-regular fa-pen-to-square "></i> Schrijf in</button>
+        </div>
+        <div class="col-sm-4  col-lg-3">
+          <button class="show-location"><i class="fa-solid fa-map-location-dot "></i> Toon op kaart</button>
+        </div>
+      </div>
+
+    </div>
+
+  </li>
+</template>
+
+
+<!-- Voeg een verborgen modaal venster toe -->
+<div class="modal" id="bevestigingModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmModalLabel">Bevestiging</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Weet je zeker dat je je wilt inschrijven voor deze activiteit?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="confirmButton">Bevestigen</button>
+        <button type="button" class="btn btn-secondary" id="cancelButton">Annuleren</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+</html>

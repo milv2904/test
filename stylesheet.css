@@ -1,0 +1,85 @@
+html, body {
+    background-color: #198754;
+    margin: 0;
+    padding: 0;
+    cursor: none;
+}
+header {
+    background-color: #198754;
+    padding: 20px;
+    text-align: center;
+}
+main{
+    background-color: #198754
+}
+header h1 {
+    font-size: 36px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    color: bisque;
+}
+
+header p {
+    font-size: 20px;
+    color: bisque;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 100vh;
+}
+
+#button-row {
+    width: 100%;
+}
+
+.btn-success {
+    position: relative;
+    overflow: hidden;
+    cursor: none;
+}
+
+.btn-success .txt {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    opacity: 0;
+    transition: opacity 0.5s;
+    font-size: 30px;
+}
+
+.btn-success .image {
+    width: 100%;
+    height: auto;
+    transition: opacity 0.5s;
+}
+
+.btn-success:hover .txt {
+    opacity: 1;
+}
+
+.btn-success:hover .image {
+    opacity: 0;
+}
+
+footer {
+    background-color: #198754;
+    color: black;
+    text-align: center;
+    padding: 20px 0;
+    font-size: 14px;
+}
+.cursor{
+    width: 25px;
+    height: 35px;
+    background: url("../images/spades-297839_640.png");
+    position: absolute;
+    visibility: hidden;
+}
